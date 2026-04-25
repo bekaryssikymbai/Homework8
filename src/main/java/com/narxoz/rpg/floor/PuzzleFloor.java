@@ -1,6 +1,8 @@
 package com.narxoz.rpg.floor;
 
+
 import com.narxoz.rpg.combatant.Hero;
+import com.narxoz.rpg.floor.FloorResult;
 import java.util.*;
 
 public class PuzzleFloor extends TowerFloor {

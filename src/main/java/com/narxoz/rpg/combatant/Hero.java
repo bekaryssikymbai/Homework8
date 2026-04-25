@@ -12,7 +12,6 @@ public class Hero {
     private int currentHp;
     private int basePower;
     private HeroState state;
-    private boolean isAlive;
 
     public Hero(String name, int maxHp, int basePower) {
         this.name = name;
@@ -20,39 +19,23 @@ public class Hero {
         this.currentHp = maxHp;
         this.basePower = basePower;
         this.state = new NormalState();
-        this.isAlive = true;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public int getCurrentHp() {
-        return currentHp;
-    }
-
-    public int getMaxHp() {
-        return maxHp;
-    }
-
-    public boolean isAlive() {
-        return isAlive && currentHp > 0;
-    }
+    public String getName() { return name; }
+    public int getCurrentHp() { return currentHp; }
+    public int getMaxHp() { return maxHp; }
+    public boolean isAlive() { return currentHp > 0; }
+    public HeroState getState() { return state; }  // ← ДОБАВИТЬ ЭТОТ ГЕТТЕР
 
     public void takeDamage(int damage) {
-        if (!isAlive) return;
-
+        if (!isAlive()) return;
         int actualDamage = state.modifyIncomingDamage(damage);
         currentHp -= actualDamage;
-
         if (currentHp <= 0) {
             currentHp = 0;
-            isAlive = false;
             System.out.println(name + " has fallen!");
         } else {
-            System.out.println(name + " takes " + actualDamage + " damage. HP: " + currentHp + "/" + maxHp);
-
-            // Check for berserk trigger when low HP
+            System.out.println(name + " takes " + actualDamage + " damage. HP: " + currentHp);
             if (currentHp < maxHp * 0.3 && !(state instanceof BerserkState)) {
                 setState(new BerserkState());
             }
@@ -60,54 +43,32 @@ public class Hero {
     }
 
     public void heal(int amount) {
-        if (!isAlive) return;
-
+        if (!isAlive()) return;
         currentHp = Math.min(maxHp, currentHp + amount);
-        System.out.println(name + " heals for " + amount + ". HP: " + currentHp + "/" + maxHp);
+        System.out.println(name + " heals " + amount + " HP. Now: " + currentHp);
     }
 
     public int attack() {
-        if (!isAlive || !state.canAct()) {
+        if (!isAlive() || !state.canAct()) {
             System.out.println(name + " cannot attack!");
             return 0;
         }
-
         int damage = state.modifyOutgoingDamage(basePower);
         System.out.println(name + " attacks for " + damage + " damage!");
         return damage;
     }
 
     public void setState(HeroState newState) {
-        System.out.println(name + " state changes: " + state.getName() + " -> " + newState.getName());
+        System.out.println(name + ": " + state.getName() + " -> " + newState.getName());
         this.state = newState;
     }
 
-    public HeroState getState() {
-        return state;
-    }
-
-    public void onTurnStart() {
-        if (isAlive) {
-            state.onTurnStart(this);
-        }
-    }
-
-    public void onTurnEnd() {
-        if (isAlive) {
-            state.onTurnEnd(this);
-        }
-    }
-
-    public void applyPoison() {
-        setState(new PoisonedState());
-    }
-
-    public void applyStun() {
-        setState(new StunnedState());
-    }
+    public void onTurnStart() { state.onTurnStart(this); }
+    public void onTurnEnd() { state.onTurnEnd(this); }
+    public void applyPoison() { setState(new PoisonedState()); }
+    public void applyStun() { setState(new StunnedState()); }
 
     public String getStatus() {
-        if (!isAlive) return "DEAD";
-        return name + " (HP: " + currentHp + "/" + maxHp + ", State: " + state.getName() + ")";
+        return name + " (HP:" + currentHp + "/" + maxHp + ", " + state.getName() + ")";
     }
 }

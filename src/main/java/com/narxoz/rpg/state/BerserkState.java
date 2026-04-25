@@ -1,14 +1,8 @@
 package com.narxoz.rpg.state;
 
-//import com.narxoz.rpg.combatant.Hero;
+import com.narxoz.rpg.combatant.Hero;
 
 public class BerserkState implements HeroState {
-    private int turnsActive;
-
-    public BerserkState() {
-        this.turnsActive = 0;
-    }
-
     @Override
     public String getName() {
         return "Berserk!";
@@ -16,30 +10,23 @@ public class BerserkState implements HeroState {
 
     @Override
     public int modifyOutgoingDamage(int basePower) {
-        return basePower * 2; // Double damage output
+        return basePower * 2;
     }
 
     @Override
     public int modifyIncomingDamage(int rawDamage) {
-        return rawDamage + 10; // Take extra damage due to reckless fighting
+        return rawDamage + 10;
     }
 
     @Override
     public void onTurnStart(Hero hero) {
-        turnsActive++;
-        if (hero.getCurrentHp() < hero.getMaxHp() * 0.3) {
-            System.out.println(hero.getName() + " is enraged from low health! BERSERK!");
+        if (hero.getCurrentHp() > hero.getMaxHp() * 0.5) {
+            hero.setState(new NormalState());
         }
     }
 
     @Override
-    public void onTurnEnd(Hero hero) {
-        // Berserk can end if health recovers
-        if (hero.getCurrentHp() > hero.getMaxHp() * 0.5) {
-            hero.setState(new NormalState());
-            System.out.println(hero.getName() + " calms down from berserk state.");
-        }
-    }
+    public void onTurnEnd(Hero hero) {}
 
     @Override
     public boolean canAct() {

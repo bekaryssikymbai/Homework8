@@ -17,9 +17,10 @@ public abstract class TowerFloor {
     }
 
     protected void announce() {
-        System.out.println("\n=== Entering " + getFloorName() + " ===");
+        System.out.println("\n=== " + getFloorName() + " ===");
     }
 
+    protected abstract String getFloorName();
     protected abstract void setup(List<Hero> party);
     protected abstract FloorResult resolveChallenge(List<Hero> party);
     protected abstract void awardLoot(List<Hero> party, FloorResult result);
@@ -28,9 +29,5 @@ public abstract class TowerFloor {
         return result.isCleared();
     }
 
-    protected void cleanup(List<Hero> party) {
-        // Default: do nothing
-    }
-
-    protected abstract String getFloorName();
+    protected void cleanup(List<Hero> party) {}
 }

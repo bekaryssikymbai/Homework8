@@ -1,34 +1,29 @@
 package com.narxoz.rpg.state;
 
-//import com.narxoz.rpg.combatant.Hero;
+import com.narxoz.rpg.combatant.Hero;
 
 public class PoisonedState implements HeroState {
-    private int turnsRemaining;
-
-    public PoisonedState() {
-        this.turnsRemaining = 3;
-    }
+    private int turnsRemaining = 3;
 
     @Override
     public String getName() {
-        return "Poisoned (" + turnsRemaining + " turns left)";
+        return "Poisoned (" + turnsRemaining + " turns)";
     }
 
     @Override
     public int modifyOutgoingDamage(int basePower) {
-        return basePower / 2; // Poison reduces attack power
+        return basePower / 2;
     }
 
     @Override
     public int modifyIncomingDamage(int rawDamage) {
-        return rawDamage; // No change to incoming damage
+        return rawDamage;
     }
 
     @Override
     public void onTurnStart(Hero hero) {
-        int poisonDamage = 5;
-        hero.takeDamage(poisonDamage);
-        System.out.println(hero.getName() + " takes " + poisonDamage + " poison damage!");
+        hero.takeDamage(5);
+        System.out.println(hero.getName() + " takes poison damage!");
     }
 
     @Override
@@ -36,7 +31,6 @@ public class PoisonedState implements HeroState {
         turnsRemaining--;
         if (turnsRemaining <= 0) {
             hero.setState(new NormalState());
-            System.out.println(hero.getName() + " is no longer poisoned!");
         }
     }
 

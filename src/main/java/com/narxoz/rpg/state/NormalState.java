@@ -1,6 +1,6 @@
 package com.narxoz.rpg.state;
 
-//import com.narxoz.rpg.combatant.Hero;
+import com.narxoz.rpg.combatant.Hero;
 
 public class NormalState implements HeroState {
     @Override
@@ -19,14 +19,10 @@ public class NormalState implements HeroState {
     }
 
     @Override
-    public void onTurnStart(Hero hero) {
-        // No effect
-    }
+    public void onTurnStart(Hero hero) {}
 
     @Override
-    public void onTurnEnd(Hero hero) {
-        // No effect
-    }
+    public void onTurnEnd(Hero hero) {}
 
     @Override
     public boolean canAct() {

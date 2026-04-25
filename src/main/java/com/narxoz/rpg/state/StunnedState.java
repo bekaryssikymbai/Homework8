@@ -1,31 +1,23 @@
 package com.narxoz.rpg.state;
 
-//import com.narxoz.rpg.combatant.Hero;
+import com.narxoz.rpg.combatant.Hero;
 
 public class StunnedState implements HeroState {
-    private int turnsRemaining;
-
-    public StunnedState() {
-        this.turnsRemaining = 1;
-    }
-
-    public StunnedState(int turns) {
-        this.turnsRemaining = turns;
-    }
+    private int turnsRemaining = 1;
 
     @Override
     public String getName() {
-        return "Stunned (" + turnsRemaining + " turns)";
+        return "Stunned";
     }
 
     @Override
     public int modifyOutgoingDamage(int basePower) {
-        return 0; // Can't attack while stunned
+        return 0;
     }
 
     @Override
     public int modifyIncomingDamage(int rawDamage) {
-        return rawDamage; // Take normal damage
+        return rawDamage;
     }
 
     @Override
@@ -38,12 +30,11 @@ public class StunnedState implements HeroState {
         turnsRemaining--;
         if (turnsRemaining <= 0) {
             hero.setState(new NormalState());
-            System.out.println(hero.getName() + " recovers from stun!");
         }
     }
 
     @Override
     public boolean canAct() {
-        return false; // Stunned heroes cannot act
+        return false;
     }
 }

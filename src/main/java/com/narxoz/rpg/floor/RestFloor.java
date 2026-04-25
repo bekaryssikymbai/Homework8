@@ -5,65 +5,36 @@ import com.narxoz.rpg.state.NormalState;
 import java.util.*;
 
 public class RestFloor extends TowerFloor {
-    private String floorName;
+    private String name;
 
     public RestFloor(String name) {
-        this.floorName = name;
+        this.name = name;
     }
 
     @Override
-    protected String getFloorName() {
-        return floorName;
-    }
-
-    @Override
-    protected void announce() {
-        super.announce();
-        System.out.println("A peaceful sanctuary - time to rest!");
-    }
+    protected String getFloorName() { return name; }
 
     @Override
     protected void setup(List<Hero> party) {
-        System.out.println("Heroes find a comfortable spot to rest.");
+        System.out.println("Resting...");
     }
 
     @Override
     protected FloorResult resolveChallenge(List<Hero> party) {
-        System.out.println("\n=== RESTING ===");
-
-        int heroesHealed = 0;
-        int statesCleared = 0;
-
-        for (Hero hero : party) {
-            if (hero.isAlive()) {
-                hero.heal(25);
-                heroesHealed++;
-
-                // Clear negative states and return to normal
-                if (!(hero.getState() instanceof NormalState)) {
-                    hero.setState(new NormalState());
-                    statesCleared++;
-                }
+        for (Hero h : party) {
+            if (h.isAlive()) {
+                h.heal(30);
+                h.setState(new NormalState());
             }
         }
-
-        System.out.println("Rest complete! " + heroesHealed + " heroes healed.");
-        if (statesCleared > 0) {
-            System.out.println(statesCleared + " negative states cleared!");
-        }
-
-        return new FloorResult(true, "Restful night", heroesHealed);
+        return new FloorResult(true, "Rested", (int) party.stream().filter(Hero::isAlive).count());
     }
 
     @Override
-    protected void awardLoot(List<Hero> party, FloorResult result) {
-        // Rest floors don't give loot - overriding hook
-        System.out.println("No loot - rest is its own reward.");
-    }
+    protected void awardLoot(List<Hero> party, FloorResult result) {}
 
     @Override
     protected boolean shouldAwardLoot(FloorResult result) {
-        // Override hook - rest floors never give loot
         return false;
     }
 }
